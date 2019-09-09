@@ -8,6 +8,7 @@ If no album is specified all the albums will be downloaded. If there are spaces 
 #### Example:
 ```
 $ python scrape.py shironamhin
+$ python scrape.py arnob doob
 $ python scrape.py shironamhin bondho_janala
 $ python scrape.py stoic_bliss kolponar_baire light_years_ahead
 $ python scrape.py AuRThoHiN AushoMAPTO_1 tRIMAtrik sUMon_O_Aurthohin Dhrubok
