@@ -5,6 +5,8 @@ import sys
 import os
 import os.path
 import errno
+import threading
+
 
 bandname = ""
 album = ""
@@ -59,6 +61,12 @@ def makelookgood(cur):
         cur = "https:" + cur
     return cur
 
+def download(url, targetfile):
+    print bcolors.OKBLUE + "Downloading @" + targetfile + bcolors.ENDC
+    urllib.urlretrieve(url, targetfile)
+    print bcolors.OKGREEN + "Finished @" + targetfile + bcolors.ENDC
+
+
 def processLink(url):
     if desired not in url:
         return
@@ -66,11 +74,11 @@ def processLink(url):
     targetdir = homedir + "/" + sep[-4] + "/" + sep[-3]
     mkdir_p(targetdir)
     targetfile = targetdir + "/" + sep[-2]
-    print bcolors.OKBLUE + "Downloading @" + targetfile + bcolors.ENDC
     url = url.replace("https:", "http:")
     url = url[:-1]
     try:
-        urllib.urlretrieve(url, targetfile)
+        x = threading.Thread(target=download, args=(url, targetfile,))
+        x.start()
     except:
         print bcolors.WARNING + "Download failed" + bcolors.ENDC
 
