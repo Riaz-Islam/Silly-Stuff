@@ -2,8 +2,10 @@ package main
 
 import (
 	"Bot/tracker"
+	b64 "encoding/base64"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"io/ioutil"
 	"os"
 	"strings"
 	"sync"
@@ -27,6 +29,8 @@ const (
 `
 )
 
+const tokenFile = "./data/26444505359699l498.bin"
+
 var (
 	commandPrefix uint8
 	botID         string
@@ -41,10 +45,12 @@ func main() {
 	//	tracker.LogInfo("Cache init() error :", err.Error())
 	//	panic(err)
 	//}
-
+	configFile, err := ioutil.ReadFile(tokenFile)
+	errCheck("error reading token file", err)
+	token, _ := b64.StdEncoding.DecodeString(string(configFile))
 	commandPrefix = '&'
 
-	discord, err := discordgo.New("Bot NTk0NzkyNjMwNzE4NjkzMzc3.XRhp2g.x0LMm5dqYQehv9X4feoHlfZRHMc")
+	discord, err := discordgo.New("Bot " + string(token))
 	errCheck("error creating discord session", err)
 	user, err := discord.User("@me")
 	errCheck("error retrieving account", err)

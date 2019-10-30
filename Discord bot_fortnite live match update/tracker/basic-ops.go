@@ -108,11 +108,12 @@ func getStat(name, platform string) (Stat, error) {
 func Check(discord *discordgo.Session) string {
 	GlobalSession = discord
 	statDumpTime := time.Now()
+	statPrintTime := time.Now()
 	for {
 		curTime := time.Now()
 		if time.Now().Sub(statDumpTime) > 30*time.Second {
 			go statDump(discord)
-			LogVerbosef("stat dump at : %v", time.Now())
+			LogVerbosef("Stat dump at : %v", time.Now())
 			statDumpTime = time.Now()
 			//statInit(discord)
 		}
@@ -124,6 +125,16 @@ func Check(discord *discordgo.Session) string {
 			for _, stat := range GlobalStat[s].Stats {
 				nametostat[stat.Name] = stat
 			}
+		}
+		if time.Now().Sub(statPrintTime) > 1*time.Minute {
+			LogVerbose("Globalstat length: ", len(GlobalStat))
+			for s := range GlobalStat {
+				LogVerbose("Stat for server: ", s, " total: ", len(GlobalStat[s].Stats))
+				if GlobalStat[s] != nil || len(GlobalStat[s].Stats) > 0 {
+					LogVerbose(*GlobalStat[s])
+				}
+			}
+			statPrintTime = time.Now()
 		}
 		//gocommon.LogVerbosef("lock released by check1")
 		Mutex.Unlock()
